@@ -1,0 +1,38 @@
+.container {
+	border-top: 1px solid;
+	border-left: 1px solid;
+}
+.header,
+.rowIndicator {
+	text-transform: uppercase;
+	font-weight: bold;
+	background-color: beige;
+}
+.row {
+	display: flex;
+}
+.row > div,
+.rowIndicator > div {
+	width: 60px;
+	border-right: 1px solid;
+	border-bottom: 1px solid;
+	height: 20px;
+	text-align: center;
+	cursor: pointer;
+}
+.rowIndicator > div {
+	text-transform: uppercase;
+}
+.tableBody {
+	display: flex;
+}
+.tableData {
+}
+.input {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	outline: none;
+}

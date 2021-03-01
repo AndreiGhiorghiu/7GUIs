@@ -1,0 +1,25 @@
+.tab {
+	text-transform: capitalize;
+	font-size: 20px;
+	color: #000;
+	padding: 10px 15px;
+	flex: 1;
+	text-align: center;
+	border-bottom: 3px solid rgb(113, 116, 116);
+	cursor: pointer;
+}
+.tabActive {
+	padding: 9px 15px;
+	border-bottom-color: lightblue;
+	border-bottom-width: 5px;
+}
+.tab:hover {
+	border-bottom-color: lightblue;
+}
+.tabs {
+	display: flex;
+	justify-content: space-between;
+}
+.projectsContainer {
+	margin-top: 50px;
+}

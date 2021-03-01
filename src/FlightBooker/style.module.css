@@ -1,0 +1,11 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	width: 200px;
+}
+.item {
+	margin-top: 10px;
+}
+.itemError {
+	background: red;
+}
