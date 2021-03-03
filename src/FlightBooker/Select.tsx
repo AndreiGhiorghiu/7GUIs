@@ -1,7 +1,12 @@
 import React from "react";
 import $ from "./style.module.css";
 
-const Select = ({ value, onChange }) => {
+interface SelectProps {
+	value: string;
+	onChange: (arg: string) => void;
+}
+
+const Select = ({ value, onChange }: SelectProps) => {
 	return (
 		<select
 			className={$.item}

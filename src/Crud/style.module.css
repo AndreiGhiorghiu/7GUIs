@@ -1,0 +1,51 @@
+.container {
+	background-color: #eeeeee;
+	padding: 5px;
+	width: 350px;
+	border: 1px solid #999999;
+	border-radius: 4px;
+}
+.inline {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+.view {
+	background-color: #fff;
+	padding: 2px;
+	border: 1px solid #999999;
+	height: 80px;
+	max-height: 80px;
+	overflow: scroll;
+}
+.listItem:hover {
+	background-color: blue;
+	color: #fff;
+}
+.listItem {
+	cursor: pointer;
+}
+.actions {
+	display: flex;
+}
+.left {
+	width: 170px;
+}
+.leftTop {
+	width: 176px;
+}
+.edit .inline > span {
+	width: 70px;
+}
+.edit input {
+	width: 80px;
+}
+.edit {
+	margin-left: 10px;
+}
+.buttons {
+	margin-top: 10px;
+}
+.buttons button {
+	margin-right: 15px;
+}

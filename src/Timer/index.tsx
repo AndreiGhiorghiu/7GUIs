@@ -1,26 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import $ from "./style.module.css";
+import { initialState, reducer } from "./reducer";
+
+let progressInterval: any = null;
 
 const Timer = () => {
-	const [seconds, setSeconds] = useState(5);
-	const [percent, setPercent] = useState(0);
-	const [reset, setReset] = useState(false);
+	const [state, dispatch] = useReducer(reducer, initialState);
+
+	const { seconds, percent } = state;
 
 	useEffect(() => {
-		if (reset !== true) return;
+		RESET();
+	}, []);
+
+	const UPDATE_SECONDS = (value: number) => {
+		dispatch({ type: "update_seconds", value });
+	};
+
+	const UPDATE_PERCENT = (value: number) => {
+		dispatch({ type: "update_percent", value });
+	};
+
+	const RESET = () => {
 		let currentSecond = 0;
-		const progressInterval = setInterval(() => {
-			const percentTmp = (currentSecond * 100) / seconds;
+
+		if (progressInterval) {
+			clearInterval(progressInterval);
+		}
+
+		progressInterval = setInterval(() => {
+			const newPercent = (currentSecond * 100) / seconds;
 			currentSecond += 0.1;
 
-			setPercent(percentTmp);
+			UPDATE_PERCENT(newPercent);
+
 			if (currentSecond > seconds) {
 				currentSecond = 0;
 				clearInterval(progressInterval);
 			}
 		}, 100);
-		setReset(false);
-	}, [reset]);
+	};
 
 	return (
 		<div className={$.container}>
@@ -39,12 +58,15 @@ const Timer = () => {
 					<input
 						type="range"
 						value={seconds}
-						onChange={(e) => setSeconds(e.target.value)}
+						onChange={(e) => {
+							UPDATE_SECONDS(parseFloat(e.target.value));
+							RESET();
+						}}
 					/>
 				</div>
 			</div>
 
-			<button onClick={() => setReset(true)}>Reset</button>
+			<button onClick={() => RESET()}>Reset</button>
 		</div>
 	);
 };

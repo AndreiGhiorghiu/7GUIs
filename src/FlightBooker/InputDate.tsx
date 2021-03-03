@@ -1,27 +1,14 @@
 import React from "react";
 import $ from "./style.module.css";
+import { InitialInputStateValues } from "./types";
 
-const InputDate = ({ data, onChange, disabled }) => {
-	const validate = (value) => {
-		const regexExpression = /^([0-9]{2}\.[0-9]{2}\.[0-9]{4})$/;
+interface InputDateProps {
+	data: InitialInputStateValues;
+	onChange: (arg: InitialInputStateValues) => void;
+	disabled: boolean;
+}
 
-		if (regexExpression.test(value)) return true;
-
-		return false;
-	};
-
-	const formatDate = (dateString) => {
-		const dateStartObject = dateString.split(".").map((nr) => parseInt(nr));
-
-		const dateStartFormatted = new Date(
-			dateStartObject[2],
-			dateStartObject[1] - 1,
-			dateStartObject[0]
-		);
-
-		return dateStartFormatted;
-	};
-
+const InputDate = ({ data, onChange, disabled }: InputDateProps) => {
 	return (
 		<input
 			className={`${$.item} ${(!data.valid && $.itemError) || ""}`}
@@ -31,15 +18,8 @@ const InputDate = ({ data, onChange, disabled }) => {
 			disabled={disabled}
 			onChange={(e) => {
 				const value = e.target.value;
-				const valid = validate(value);
 
-				let date = null;
-
-				if (valid) {
-					date = formatDate(value);
-				}
-
-				onChange({ value, valid, date });
+				onChange({ ...data, value });
 			}}
 		/>
 	);

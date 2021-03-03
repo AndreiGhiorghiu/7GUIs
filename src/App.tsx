@@ -4,6 +4,7 @@ import TemperatureConverter from "./TemperatureConverter";
 import FlightBooker from "./FlightBooker";
 import Timer from "./Timer";
 import Cells from "./Cells";
+import Crud from "./Crud";
 
 import $ from "./App.module.css";
 
@@ -12,11 +13,12 @@ const tabs = {
 	"Temperature Converter": <TemperatureConverter />,
 	"Flight Booker": <FlightBooker />,
 	"Timer": <Timer />,
+	"Crud": <Crud />,
 	"Cells": <Cells />,
 };
 
 const App = () => {
-	const [activeTab, setActiveTab] = useState("Cells");
+	const [activeTab, setActiveTab] = useState("CRUD");
 
 	const renderTabs = () => {
 		return Object.keys(tabs).map((tabName, index) => (
