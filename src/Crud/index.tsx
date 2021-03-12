@@ -1,78 +1,111 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import $ from "./style.module.css";
 import { useStore } from "./reducer";
+import { PersonValues } from "./types";
 
 const Crud = (): JSX.Element => {
 	const [state, dispatch] = useStore();
-	const { people } = state;
+	const { people, prefix, selected } = state;
 
-	const nameRef = useRef();
-	const surnameRef = useRef();
-	const indexRef = useRef(null);
+	const [name, setName] = useState("");
+	const [surname, setSurname] = useState("");
 
-	const CREATE = () => {
-		const name = nameRef.current.value;
-		const surname = surnameRef.current.value;
+	const disabled = selected === null;
 
-		RESET();
-		dispatch({ type: "CREATE", name, surname });
+	const SET_PREFIX = (value: string) => {
+		dispatch({ type: "SET_PREFIX", value: value });
 	};
-	const UPDATE = () => {
-		const name = nameRef.current.value;
-		const surname = surnameRef.current.value;
 
-		dispatch({ type: "UPDATE", name, surname, index: indexRef.current });
+	const SELECT = (value: number | null) => {
+		if (selected === value) {
+			dispatch({ type: "SELECT", value: null });
+			SET_FIELDS(null);
+		} else {
+			dispatch({ type: "SELECT", value });
+			SET_FIELDS(value);
+		}
 	};
-	const DELETE = () => {
-		RESET();
 
-		dispatch({ type: "DELETE", index: indexRef.current });
+	const SET_FIELDS = (index: number | null) => {
+		if (index !== null) {
+			const data = people[index];
+			setName(data.name);
+			setSurname(data.surname);
+		} else {
+			setName("");
+			setSurname("");
+		}
 	};
-	const SELECT = (data, index) => {
-		indexRef.current = index;
-		nameRef.current.value = data.name;
-		surnameRef.current.value = data.surname;
+
+	const renderListItems = () => {
+		const peopleFiltered = people.filter(
+			(item) => item.surname.toLowerCase().indexOf(prefix.toLowerCase()) === 0
+		);
+
+		if (!peopleFiltered.length) {
+			return <div>No results!</div>;
+		}
+
+		return peopleFiltered.map(
+			(item: PersonValues, index: number): JSX.Element => {
+				return (
+					<div
+						key={index}
+						onClick={() => SELECT(index)}
+						className={`${$.listItem} ${selected === index ? $.active : ""}`}
+					>{`${item.name}, ${item.surname}`}</div>
+				);
+			}
+		);
 	};
-	const RESET = () => {
-		nameRef.current.value = "";
-		surnameRef.current.value = "";
-		indexRef.current = null;
-	};
-	const FILTER = () => {};
 
 	return (
 		<div className={$.container}>
 			<div className={`${$.inline} ${$.leftTop}`}>
 				<div style={{ flex: 1 }}>Filter prefix:</div>
-				<input type="text" style={{ width: "50px" }} />
+				<input
+					type="text"
+					style={{ width: "50px" }}
+					value={prefix}
+					onChange={(e) => SET_PREFIX(e.target.value)}
+				/>
 			</div>
 
 			<div className={$.actions}>
-				<div className={`${$.view} ${$.left}`}>
-					{people.map((item, index) => (
-						<div
-							key={index}
-							onClick={() => SELECT(item, index)}
-							className={$.listItem}
-						>{`${item.name}, ${item.surname}`}</div>
-					))}
-				</div>
+				<div className={`${$.view} ${$.left}`}>{renderListItems()}</div>
 
 				<div className={$.edit}>
 					<div className={$.inline}>
 						<span>Name</span>
-						<input type="text" ref={nameRef} />
+						<input
+							type="text"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+						/>
 					</div>
 					<div className={$.inline}>
 						<span>Surname</span>
-						<input type="text" ref={surnameRef} />
+						<input
+							type="text"
+							value={surname}
+							onChange={(e) => setSurname(e.target.value)}
+						/>
 					</div>
 				</div>
 			</div>
+
 			<div className={$.buttons}>
-				<button onClick={() => CREATE()}>Create</button>
-				<button onClick={() => UPDATE()}>Update</button>
-				<button onClick={() => DELETE()}>Delete</button>
+				<button
+					onClick={() => dispatch({ type: "CREATE", value: { name, surname } })}
+				>
+					Create
+				</button>
+				<button disabled={disabled} onClick={() => {}}>
+					Update
+				</button>
+				<button disabled={disabled} onClick={() => {}}>
+					Delete
+				</button>
 			</div>
 		</div>
 	);

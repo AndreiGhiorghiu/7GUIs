@@ -1,41 +1,48 @@
-import { useReducer } from "react";
-import { State, Reducer } from "./types";
+import React, { useReducer } from "react";
+import { State, Reducer, PersonValues } from "./types";
 
 const inititialState: State = {
 	people: [
 		{ name: "Emil", surname: "Hans" },
 		{ name: "Tisch", surname: "Roman" },
 	],
+	prefix: "",
+	selected: null,
 };
 
-const reducer = (prev: State, { type, ...data }: Reducer): State => {
+const reducer = (prev: State, { type, value }: Reducer): State => {
 	const state = { ...prev };
 
 	switch (type) {
-		case "CREATE":
-			state.people.push(data);
-
+		case "SET_PREFIX":
+			state.prefix = value;
 			break;
-		case "UPDATE":
-			if (state.people[data.index]) {
-				state.people[data.index] = { name: data.name, surname: data.surname };
+
+		case "CREATE":
+			if (!("name" in value) || !("surname" in value)) {
+				break;
 			}
 
-			break;
-		case "DELETE":
-			state.people.splice(data.index, 1);
+			state.people.push({
+				name: value.name,
+				surname: value.surname,
+			});
 
+			break;
+
+		case "SELECT":
+			state.selected = value;
 			break;
 
 		default:
-			throw new Error("Action not found!");
+			throw new Error(`Action ${type} not found!`);
 	}
 
 	return state;
 };
 
-export function useStore() {
+export const useStore = (): [State, React.Dispatch<Reducer>] => {
 	const [state, dispatch] = useReducer(reducer, inititialState);
 
 	return [state, dispatch];
-}
+};

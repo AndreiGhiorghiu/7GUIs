@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import $ from "./style.module.css";
 import { initialState, reducer } from "./reducer";
 

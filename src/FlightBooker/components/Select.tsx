@@ -1,5 +1,5 @@
 import React from "react";
-import $ from "./style.module.css";
+import $ from "../style.module.css";
 
 interface SelectProps {
 	value: string;

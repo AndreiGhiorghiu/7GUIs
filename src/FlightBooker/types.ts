@@ -1,16 +1,10 @@
-export interface InitialInputStateValues {
-	value: string;
-	valid: boolean;
-	date: Date | null;
-}
-
 export interface StateValues {
-	flightType?: string;
-	dateStart?: InitialInputStateValues;
-	dateEnd?: InitialInputStateValues;
-	canBook?: boolean;
+	flightType: string;
+	dateStart: Date | null;
+	dateEnd: Date | null;
 }
 
-export interface ReducerValues extends StateValues {
+export interface ReducerValues {
 	type: string;
+	value?: any;
 }

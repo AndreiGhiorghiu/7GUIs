@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import Counter from "./Counter";
 import TemperatureConverter from "./TemperatureConverter";
-import FlightBooker from "./FlightBooker";
+import FlightBooker from "./FlightBooker/index";
 import Timer from "./Timer";
-import Cells from "./Cells";
 import Crud from "./Crud";
 
 import $ from "./App.module.css";
 
-const tabs = {
+const tabs: { [key: string]: JSX.Element } = {
 	"counter": <Counter />,
 	"Temperature Converter": <TemperatureConverter />,
 	"Flight Booker": <FlightBooker />,
 	"Timer": <Timer />,
 	"Crud": <Crud />,
-	"Cells": <Cells />,
 };
 
 const App = () => {
-	const [activeTab, setActiveTab] = useState("CRUD");
+	const [activeTab, setActiveTab] = useState("Crud");
 
 	const renderTabs = () => {
 		return Object.keys(tabs).map((tabName, index) => (

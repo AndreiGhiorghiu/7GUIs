@@ -18,6 +18,7 @@
 	max-height: 80px;
 	overflow: scroll;
 }
+.listItem.active,
 .listItem:hover {
 	background-color: blue;
 	color: #fff;

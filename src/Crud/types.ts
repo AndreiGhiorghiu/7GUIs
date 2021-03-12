@@ -5,11 +5,11 @@ export interface PersonValues {
 
 export interface State {
 	people: PersonValues[];
+	prefix: string;
+	selected: null | number;
 }
 
 export interface Reducer {
-	name: string;
-	surname: string;
 	type: string;
-	index: number;
+	value?: any;
 }

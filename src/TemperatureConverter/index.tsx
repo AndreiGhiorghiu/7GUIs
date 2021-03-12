@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import $ from "./style.module.css";
 
-const Input = ({ value, onChange, label }) => {
+interface InputProps {
+	value: number;
+	onChange: (value: string) => void;
+	label: string;
+}
+
+const Input = ({ value, onChange, label }: InputProps): JSX.Element => {
 	return (
 		<div className={$.item}>
 			<label>{label}</label>
@@ -15,16 +21,16 @@ const Input = ({ value, onChange, label }) => {
 	);
 };
 
-const TemperatureConverter = () => {
+const TemperatureConverter = (): JSX.Element => {
 	const [tc, setTc] = useState(0);
 	const [tf, setTf] = useState(() => tc * (9 / 5) + 32);
 
-	const handleChangeTC = (value) => {
+	const CHANGE_TC = (value: number) => {
 		setTc(value);
 		setTf(value * (9 / 5) + 32);
 	};
 
-	const handleChangeTF = (value) => {
+	const CHANGE_TF = (value: number) => {
 		setTf(value);
 		setTc((value - 32) * (5 / 9));
 	};
@@ -33,13 +39,13 @@ const TemperatureConverter = () => {
 		<div className={$.container}>
 			<Input
 				value={tc}
-				onChange={(val) => handleChangeTC(val)}
+				onChange={(val) => CHANGE_TC(parseFloat(val))}
 				label={"Celsius"}
 			/>
 			<span>=</span>
 			<Input
 				value={tf}
-				onChange={(val) => handleChangeTF(val)}
+				onChange={(val) => CHANGE_TF(parseFloat(val))}
 				label={"Fahrenheit"}
 			/>
 		</div>

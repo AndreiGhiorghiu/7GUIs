@@ -1,64 +1,43 @@
-import { validate, formatDate } from "./helpers";
-import { ReducerValues, InitialInputStateValues } from "./types";
-
-export const initialInputState: InitialInputStateValues = {
-	value: "",
-	valid: true,
-	date: null,
-};
+import { ReducerValues } from "./types";
 
 export const initState = {
 	flightType: "one-way",
-	dateStart: initialInputState,
-	dateEnd: initialInputState,
-	canBook: false,
+	dateStart: null,
+	dateEnd: null,
 };
 
-export const reducer = (prev: any, { type, ...data }: ReducerValues) => {
+export const reducer = (prev: any, { type, value }: ReducerValues) => {
 	const state = { ...prev };
 
-	switch (type) {
-		case "updateDate":
-			for (const key in data) {
-				if (["dateStart", "dateEnd"].includes(key)) {
-					const valid = validate(data[key]?.value);
+	const next = (ss: string) => {
+		switch (ss) {
+			case "SET_FLIGHT_TYPE":
+				state.flightType = value;
 
-					let date = null;
+				next("RESET");
+				break;
+			case "SET_START_DATE":
+				state.dateStart = value;
 
-					if (valid) {
-						date = formatDate(data[key].value);
-					}
+				break;
 
-					data[key].date = date;
-					data[key].valid = valid;
-				}
-			}
+			case "SET_END_DATE":
+				state.dateEnd = value;
 
-		case "update":
-			Object.assign(state, data);
+				break;
 
-			let ok = false;
-			if (state.flightType === "return") {
-				if (state.dateStart.date && state.dateEnd.date) {
-					const dateStartTimestamp = state.dateStart.date.getTime();
-					const dateEndTimestamp = state.dateEnd.date.getTime();
+			case "RESET":
+				state.dateStart = null;
+				state.dateEnd = null;
 
-					if (dateEndTimestamp >= dateStartTimestamp) {
-						ok = true;
-					}
-				}
-			} else {
-				if (state.dateStart.date) {
-					ok = true;
-				}
-			}
+				break;
 
-			state.canBook = ok;
-			break;
+			default:
+				throw new Error("Action type doesn't exist!");
+		}
+	};
 
-		default:
-			throw new Error("Dispatch type doesn't exist!");
-	}
+	next(type);
 
 	return state;
 };
