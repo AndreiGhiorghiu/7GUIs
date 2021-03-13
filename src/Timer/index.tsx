@@ -1,45 +1,47 @@
-import React, { useEffect, useReducer } from "react";
+import React, { BaseSyntheticEvent, useEffect } from "react";
 import $ from "./style.module.css";
-import { initialState, reducer } from "./reducer";
+import useController from "./controller";
 
 let progressInterval: any = null;
 
 const Timer = () => {
-	const [state, dispatch] = useReducer(reducer, initialState);
+	const [state, dispatch] = useController();
 
 	const { seconds, percent } = state;
 
 	useEffect(() => {
-		RESET();
+		START_TIMER();
 	}, []);
 
-	const UPDATE_SECONDS = (value: number) => {
-		dispatch({ type: "update_seconds", value });
-	};
+	function SET_SECONDS(e: BaseSyntheticEvent) {
+		dispatch({ type: "SET_SECONDS", value: parseFloat(e.target.value) });
+		START_TIMER();
+	}
 
-	const UPDATE_PERCENT = (value: number) => {
-		dispatch({ type: "update_percent", value });
-	};
-
-	const RESET = () => {
-		let currentSecond = 0;
-
+	function CLEAR_INTERVAL() {
 		if (progressInterval) {
 			clearInterval(progressInterval);
 		}
+	}
+
+	function START_TIMER() {
+		let currentSecond = 0;
+
+		CLEAR_INTERVAL();
 
 		progressInterval = setInterval(() => {
 			const newPercent = (currentSecond * 100) / seconds;
 			currentSecond += 0.1;
 
-			UPDATE_PERCENT(newPercent);
+			dispatch({ type: "UPDATE_PERCENT", value: newPercent });
 
 			if (currentSecond > seconds) {
 				currentSecond = 0;
-				clearInterval(progressInterval);
+
+				CLEAR_INTERVAL();
 			}
 		}, 100);
-	};
+	}
 
 	return (
 		<div className={$.container}>
@@ -55,18 +57,11 @@ const Timer = () => {
 			<div className={$.formItem}>
 				<span>Duration:</span>
 				<div>
-					<input
-						type="range"
-						value={seconds}
-						onChange={(e) => {
-							UPDATE_SECONDS(parseFloat(e.target.value));
-							RESET();
-						}}
-					/>
+					<input type="range" value={seconds} onChange={SET_SECONDS} />
 				</div>
 			</div>
 
-			<button onClick={() => RESET()}>Reset</button>
+			<button onClick={START_TIMER}>Reset</button>
 		</div>
 	);
 };

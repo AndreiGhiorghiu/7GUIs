@@ -31,8 +31,6 @@ const reducer = (prev: any, { type, value }: ReducerValues) => {
 		return false;
 	}
 
-	console.log("aici");
-
 	switch (type) {
 		case "SET_FLIGHT_TYPE":
 			state.flightType = value;
