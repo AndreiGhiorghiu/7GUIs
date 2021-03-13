@@ -2,33 +2,55 @@ import React from "react";
 import $ from "./style.module.css";
 import InputDate from "./components/InputDate";
 import Select from "./components/Select";
-import useBehavior from "./behavior";
+import useController from "./controller";
 
 const FlightBooker = (): JSX.Element => {
+	const [state, dispatch] = useController();
 	const {
-		events,
-		flightType,
 		dateStart,
 		dateEnd,
 		canBook,
-		disableStartDate,
-	} = useBehavior();
+		flightType,
+		disableEndDate,
+		resetInputs,
+	} = state;
+
+	function onChangeFlightType(value: string) {
+		dispatch({ type: "SET_FLIGHT_TYPE", value });
+	}
+
+	function onChangeStartDate(value: Date | null) {
+		dispatch({ type: "SET_START_DATE", value });
+	}
+
+	function onChangeEndDate(value: Date | null) {
+		dispatch({ type: "SET_END_DATE", value });
+	}
+
+	function onInvalidDateStart() {
+		dispatch({ type: "SET_INVALID_START_DATE", value: true });
+	}
+
+	function onInvalidDateEnd() {
+		dispatch({ type: "SET_INVALID_END_DATE", value: true });
+	}
 
 	return (
 		<div className={$.container}>
-			<Select
-				value={flightType}
-				onChange={(value: string) => events.onChangeFlightType(value)}
-			/>
+			<Select value={flightType} onChange={onChangeFlightType} />
 
 			<InputDate
 				value={dateStart}
-				onChange={(value: Date | null) => events.onChangeStartDate(value)}
+				onChange={onChangeStartDate}
+				reset={resetInputs}
+				onInvalid={onInvalidDateStart}
 			/>
 			<InputDate
 				value={dateEnd}
-				onChange={(value: Date | null) => events.onChangeEndDate(value)}
-				disable={disableStartDate}
+				onChange={onChangeEndDate}
+				disabled={disableEndDate}
+				reset={resetInputs}
+				onInvalid={onInvalidDateEnd}
 			/>
 
 			<button className={$.item} disabled={!canBook}>

@@ -23,10 +23,13 @@ const reducer = (prev: State, { type, value }: Reducer): State => {
 				break;
 			}
 
-			state.people.push({
-				name: value.name,
-				surname: value.surname,
-			});
+			state.people = [
+				...state.people,
+				{
+					name: value.name,
+					surname: value.surname,
+				},
+			];
 
 			break;
 

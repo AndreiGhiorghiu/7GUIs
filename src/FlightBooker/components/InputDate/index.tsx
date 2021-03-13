@@ -1,15 +1,49 @@
-import React, { useEffect } from "react";
+import React, { BaseSyntheticEvent, useEffect } from "react";
 import $ from "../../style.module.css";
-import useBehavior from "./behavior";
+import useController from "./controller";
+import { validate, toDate, fromDate } from "../../helpers";
 
 interface InputDateProps {
 	value: Date;
 	onChange: (arg: Date | null) => void;
-	disable?: boolean;
+	onInvalid: (args: string) => void;
+	disabled?: boolean;
+	reset?: boolean;
 }
 
-const InputDate = ({ value, onChange, disable = false }: InputDateProps) => {
-	const { events, value: date, valid } = useBehavior(value, onChange);
+const InputDate = ({
+	value,
+	onChange,
+	onInvalid,
+	disabled = false,
+}: InputDateProps) => {
+	const [state, dispatch] = useController();
+	const { valid, value: date } = state;
+
+	useEffect(() => {
+		if (value) {
+			dispatch({ type: "SET_VALUE", value: fromDate(value) || date });
+			dispatch({ type: "SET_IS_VALID", value: true });
+		} else {
+			dispatch({ type: "RESET" });
+		}
+	}, [value]);
+
+	const CHANGE_DATE = (e: BaseSyntheticEvent) => {
+		const value = e.target.value;
+		const isValid = validate(value);
+
+		dispatch({ type: "SET_IS_VALID", value: isValid });
+		dispatch({ type: "SET_VALUE", value: value });
+
+		if (isValid) {
+			const date = toDate(value);
+
+			onChange(date);
+		} else {
+			onInvalid(value);
+		}
+	};
 
 	return (
 		<input
@@ -17,12 +51,8 @@ const InputDate = ({ value, onChange, disable = false }: InputDateProps) => {
 			value={date}
 			type="text"
 			placeholder="dd.mm.yyyy"
-			disabled={disable}
-			onChange={(e) => {
-				console.log("change");
-
-				events.changeDate(e.target.value);
-			}}
+			disabled={disabled}
+			onChange={CHANGE_DATE}
 		/>
 	);
 };
