@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
+import useBehavior from "./behavior";
 
 const Counter = () => {
-	const [count, setCount] = useState(0);
+	const { events, count } = useBehavior();
 
 	return (
 		<div>
-			<input type="text" value={count} readOnly={true} />
-			<button onClick={() => setCount(count + 1)}>Count</button>
+			<button onClick={() => events.onDecrement()}>decrement</button>{" "}
+			<input type="text" value={count} readOnly={true} />{" "}
+			<button onClick={() => events.onIncrement()}>increment</button>
 		</div>
 	);
 };

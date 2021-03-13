@@ -16,7 +16,7 @@ const tabs: { [key: string]: JSX.Element } = {
 };
 
 const App = () => {
-	const [activeTab, setActiveTab] = useState("Crud");
+	const [activeTab, setActiveTab] = useState("Flight Booker");
 
 	const renderTabs = () => {
 		return Object.keys(tabs).map((tabName, index) => (

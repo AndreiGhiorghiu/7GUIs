@@ -1,47 +1,33 @@
-import React, { useReducer } from "react";
+import React from "react";
 import $ from "./style.module.css";
 import InputDate from "./components/InputDate";
 import Select from "./components/Select";
-import { reducer, initState } from "./reducer";
+import useBehavior from "./behavior";
 
 const FlightBooker = (): JSX.Element => {
-	const [state, dispatch] = useReducer(reducer, initState);
-	const { flightType, dateStart, dateEnd } = state;
-
-	const disableStartDate = flightType !== "return";
-	const canBook = (() => {
-		if (flightType === "return") {
-			if (dateStart && dateEnd && dateStart.getTime() >= dateEnd.getTime()) {
-				return true;
-			}
-		} else {
-			if (dateStart) {
-				return true;
-			}
-		}
-		return false;
-	})();
+	const {
+		events,
+		flightType,
+		dateStart,
+		dateEnd,
+		canBook,
+		disableStartDate,
+	} = useBehavior();
 
 	return (
 		<div className={$.container}>
 			<Select
 				value={flightType}
-				onChange={(value: string) =>
-					dispatch({ type: "SET_FLIGHT_TYPE", value })
-				}
+				onChange={(value: string) => events.onChangeFlightType(value)}
 			/>
 
 			<InputDate
 				value={dateStart}
-				onChange={(value: Date | null) => {
-					dispatch({ type: "SET_START_DATE", value });
-				}}
+				onChange={(value: Date | null) => events.onChangeStartDate(value)}
 			/>
 			<InputDate
 				value={dateEnd}
-				onChange={(value: Date | null) => {
-					dispatch({ type: "SET_END_DATE", value });
-				}}
+				onChange={(value: Date | null) => events.onChangeEndDate(value)}
 				disable={disableStartDate}
 			/>
 
