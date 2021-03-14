@@ -5,7 +5,7 @@ import Cell from "./components/Cell";
 
 const containerWidth = 1900;
 
-function Table(): JSX.Element {
+function Cells(): JSX.Element {
 	const [state, dispatch] = useController();
 	const { rows, cols, active, data } = state;
 
@@ -77,4 +77,4 @@ function Table(): JSX.Element {
 	);
 }
 
-export default Table;
+export default Cells;
